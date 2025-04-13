@@ -294,10 +294,14 @@ in
         cfg.cursorTheme
       ];
 
-      home.file.${cfg2.configLocation}.text =
+      home.file.${cfg2.configLocation} =
+      {
+        text =
         lib.concatMapStrings (l: l + "\n") (lib.mapAttrsToList formatGtk2Option gtkIni)
         + cfg2.extraConfig
         + "\n";
+        force = true;
+      };
 
       home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
