@@ -158,7 +158,6 @@ in
           Restart = "on-failure";
           RestartSec = "5s";
           Environment = [
-            "PATH=${runtimePath}"
             "XDG_RUNTIME_DIR=%t"
           ]
           ++ optional (cfg.x11.display != null) "DISPLAY=${cfg.x11.display}"
