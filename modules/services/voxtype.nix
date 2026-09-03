@@ -128,14 +128,18 @@ in
     systemd.user.services.voxtype = {
       Unit = {
         Description = "Voxtype speech-to-text daemon";
-        PartOf = [ "default.target" ];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
         X-Restart-Triggers = mkIf (cfg.settings != { }) [
           "${config.xdg.configFile."voxtype/config.toml".source}"
         ];
       }
       // optionalAttrs (cfg.loadModels != [ ]) {
         Wants = [ "voxtype-model-loader.service" ];
-        After = [ "voxtype-model-loader.service" ];
+        After = [
+          "graphical-session.target"
+          "voxtype-model-loader.service"
+        ];
       };
 
       Service =
@@ -165,7 +169,7 @@ in
           ++ mapAttrsToList (name: value: "${name}=${value}") cfg.environment;
         };
 
-      Install.WantedBy = [ "default.target" ];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     systemd.user.services.voxtype-model-loader = mkIf (cfg.loadModels != [ ]) {
@@ -196,7 +200,7 @@ in
           RestartSec = "30s";
         };
 
-      Install.WantedBy = [ "default.target" ];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }
